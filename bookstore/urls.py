@@ -9,7 +9,6 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-
 schema_view = get_schema_view(
     openapi.Info(
         title="Bookstore API",
@@ -24,9 +23,12 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    # swagger
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),  # noqa
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),  # noqa
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),  # noqa
+
+    # admin panel
     path('admin/', admin.site.urls),
 
     # authorization via token
@@ -34,5 +36,8 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 
+    # apps
     path('api/users/', include('users.urls')),
+    path('api/authors/', include('author.urls')),
+
 ]

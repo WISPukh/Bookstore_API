@@ -1,7 +1,7 @@
 import os
 from datetime import timedelta
-
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,6 +28,7 @@ INSTALLED_APPS = [
 
     # apps
     'users',
+    'author'
 ]
 
 MIDDLEWARE = [
@@ -105,7 +106,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissions',
+        'rest_framework.permissions.IsAuthenticated',
     ],
 }
 
