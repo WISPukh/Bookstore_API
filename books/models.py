@@ -59,7 +59,7 @@ class Book(models.Model):
 
     @property
     def price_discounted(self):
-        items_discount = sum([item.get('discount') for item in self.tags.values('discount')])
+        items_discount = sum([item.get('discount') for item in self.genres.values('discount')])
 
         return self.price - (items_discount * 0.01) * self.price
 

@@ -10,7 +10,6 @@ class BookSerializer(serializers.Serializer):
     title = serializers.CharField(required=False)
     description = serializers.CharField(required=False)
     price = serializers.IntegerField(required=False)
-    image = serializers.CharField(required=False, allow_blank=True)
     genres = serializers.ListSerializer(child=serializers.PrimaryKeyRelatedField(queryset=Genre.objects.all()))
     author = serializers.ListSerializer(child=serializers.PrimaryKeyRelatedField(queryset=Author.objects.all()))
     release_date = serializers.DateField(required=False)

@@ -37,9 +37,11 @@ class BookViewSet(viewsets.ModelViewSet):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         data_to_create = serializer.data
-        genre = data_to_create.pop('genres')
+        genres_ids = data_to_create.pop("genres") if "genres" in data_to_create else None
+        authors_ids = data_to_create.pop("author") if "author" in data_to_create else None
         new_book = self.model.objects.create(**data_to_create)
-        new_book.genres.set(genre)
+        new_book.genres.set(genres_ids)
+        new_book.author.set(authors_ids)
         new_book.save()
 
         return Response(status=201, data=serializer.data)
