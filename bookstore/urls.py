@@ -39,5 +39,7 @@ urlpatterns = [
     # apps
     path('api/users/', include('users.urls')),
     path('api/authors/', include('author.urls')),
+    path('api/books/', include('books.urls')),
+    path('api/genres/', include('genres.urls')),
 
 ]
