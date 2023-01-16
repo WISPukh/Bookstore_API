@@ -1,0 +1,2 @@
+class UnexpectedItemError(Exception):
+    pass
