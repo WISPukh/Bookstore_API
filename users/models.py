@@ -9,6 +9,7 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(_("email address"), blank=False, unique=True)
     personal_discount = models.IntegerField(default=0)
+    balance = models.IntegerField(default=0)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

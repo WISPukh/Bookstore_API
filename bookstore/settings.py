@@ -30,7 +30,9 @@ INSTALLED_APPS = [
     'users',
     'author',
     'books',
-    'genres'
+    'genres',
+    'carts',
+    'orders'
 ]
 
 MIDDLEWARE = [
@@ -154,3 +156,15 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
+# Email settings
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
+EMAIL_HOST = os.environ['EMAIL_HOST']
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
