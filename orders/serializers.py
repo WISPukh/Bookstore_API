@@ -21,7 +21,7 @@ class OrderIdSerializer(serializers.Serializer):  # noqa
     order_id = serializers.CharField(read_only=False)
 
 
-class OrderOuterSerializer(serializers.Serializer):  # noqa
+class OrderOuterSerializer(OrderIdSerializer):  # noqa
     total = serializers.IntegerField(read_only=False)
     persons_discounted_price = serializers.IntegerField(read_only=False)
     products = OrderInnerSerializer(many=True)
