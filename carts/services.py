@@ -1,12 +1,10 @@
 import uuid
-from datetime import date, datetime, timedelta
+from datetime import datetime
 
-from rest_framework.serializers import ValidationError
-
+from books.models import Book
 from carts.errors import UnexpectedItemError
 from carts.models import Cart
 from carts.serializers import CartItemSerializer
-from books.models import Book
 
 
 class CartsService:
@@ -27,9 +25,6 @@ class CartsService:
 
     def make_order(self, data, model):
         items_to_update = Cart.objects.filter(user_id=self.user.pk, status='CART')
-        # print(f'//////////////////////////////////////////////////////////////////////////\n'
-        #       f'{items_to_update.exists()}\n'
-        #       f'//////////////////////////////////////////////////////////////////////////')
         if not items_to_update.exists():
             raise UnexpectedItemError("User can not make an order from empty cart")
 

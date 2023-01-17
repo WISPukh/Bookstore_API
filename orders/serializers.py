@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 
-class OrderInnerSerializer(serializers.Serializer):
+class OrderInnerSerializer(serializers.Serializer):  # noqa
     id = serializers.IntegerField(read_only=True)
     amount = serializers.IntegerField(required=True)
     state = serializers.CharField(read_only=True)
@@ -15,11 +15,13 @@ class OrderInnerSerializer(serializers.Serializer):
     total_orders_price = serializers.IntegerField(read_only=True)
     price_discounted = serializers.IntegerField(read_only=True)
     new_price = serializers.IntegerField(read_only=True)
-    serializers.ChoiceField
 
 
-class OrderOuterSerializer(serializers.Serializer):
-    order_id = serializers.CharField(read_only=True)
+class OrderIdSerializer(serializers.Serializer):  # noqa
+    order_id = serializers.CharField(read_only=False)
+
+
+class OrderOuterSerializer(serializers.Serializer):  # noqa
     total = serializers.IntegerField(read_only=False)
     persons_discounted_price = serializers.IntegerField(read_only=False)
     products = OrderInnerSerializer(many=True)

@@ -4,7 +4,7 @@ from author.models import Author
 from genres.models import Genre
 
 
-class BookSerializer(serializers.Serializer):
+class BookSerializer(serializers.Serializer):   # noqa
     id = serializers.IntegerField(read_only=True)
     in_stock = serializers.IntegerField(required=False)
     title = serializers.CharField(required=False)

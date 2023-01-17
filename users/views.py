@@ -7,4 +7,4 @@ from .serializers import UserSerializer
 class UsersViewSet(ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
-    http_method_names = ['post']  # 'get', 'patch'
+    http_method_names = ['post']

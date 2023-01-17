@@ -4,7 +4,6 @@ from django.dispatch import receiver
 
 from books.models import Book
 from carts.models import Cart
-from .tasks import order_created
 
 
 @transaction.atomic

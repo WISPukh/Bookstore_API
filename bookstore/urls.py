@@ -15,7 +15,7 @@ schema_view = get_schema_view(
         default_version='v1',
         description="backend for internship",
         terms_of_service="https://swagger.io/terms/",
-        contact=openapi.Contact(email="puhoff.ol@yandex.ru"),
+        contact=openapi.Contact(email="puhoff.ol@yandex.ru | aleksandr.boyushenko@gmail.com"),
         license=openapi.License(name="absolutely working license"),
     ),
     public=True,

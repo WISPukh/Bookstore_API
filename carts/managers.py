@@ -8,7 +8,7 @@ class CartManager(models.Manager):
 
     # FOR Cart.
 
-    def get_personal_discount(self, user_pk):
+    def get_personal_discount(self, user_pk):  # noqa
         return User.objects.filter(id=user_pk).first().personal_discount * 0.01
 
     def total_price_discounted(self, user_pk, status):

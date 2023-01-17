@@ -81,4 +81,3 @@ class Cart(models.Model):
         null=True,
         blank=True
     )
-

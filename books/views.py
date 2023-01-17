@@ -1,6 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters
-from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Book
@@ -24,13 +23,6 @@ class BookViewSet(viewsets.ModelViewSet):
         return self.model.objects.all()
 
     http_method_names = ['get', 'post', 'patch', 'delete']
-
-    #
-    # def retrieve(self, request, *args, **kwargs):
-    #     item = self.model.objects.get(id=kwargs.get('pk'))
-    #     serializer = self.serializer_class(item)
-    #
-    #     return Response(status=200, data=serializer.data)
 
     def create(self, request, *args, **kwargs):
 
