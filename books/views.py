@@ -1,28 +1,25 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from .models import Book
 from .serializers import BookSerializer
+from bookstore.filtersets import BookFilterSet
 
 
 class BookViewSet(viewsets.ModelViewSet):
-    serializer_class = BookSerializer
     model = Book
-    filter_backends = [
-        filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter
-    ]
     queryset = model.objects.all()
-    filterset_fields = ['title', 'price', 'genres__title']
-    search_fields = ['title']
-    # pagination_class = rest_framework.pagination.PageNumberPagination
+    serializer_class = BookSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_class = BookFilterSet
+    pagination_class = PageNumberPagination
 
-    ordering_fields = ['title', 'price']
-
-    def get_queryset(self):
-        return self.model.objects.all()
+    ordering_fields = ['title']
 
     http_method_names = ['get', 'post', 'patch', 'delete']
+
 
     def create(self, request, *args, **kwargs):
 
@@ -39,7 +36,7 @@ class BookViewSet(viewsets.ModelViewSet):
         return Response(status=201, data=serializer.data)
 
     def list(self, request, *args, **kwargs):
-        queryset = self.model.objects.all()
+        queryset = self.filter_queryset(self.get_queryset()).filter()
         serialized_items = self.serializer_class(list(queryset), many=True)
         return Response(status=200, data=serialized_items.data)
 
