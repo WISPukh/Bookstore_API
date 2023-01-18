@@ -1,5 +1,4 @@
 from functools import reduce
-from typing import Optional
 
 from django.db.models import CharField, Value, Q, QuerySet
 from django.db.models.functions import Concat
@@ -22,14 +21,14 @@ class BookFilterSet(FilterSet):
         model = Book
         fields = ['title', 'release_date', 'price', 'author', 'genre']
 
-    @staticmethod
-    def name_concatenate(first_part: str, second_part: str, value: str) -> Optional[QuerySet]:
-        return Author.objects.all().annotate(
-            author=Concat(
-                first_part, Value(' '), second_part, output_field=CharField())
-        ).filter(author__icontains=value).exclude('author')
+    # @staticmethod
+    # def name_concatenate(first_part: str, second_part: str, value: str) -> Optional[QuerySet]:
+    #     return Author.objects.all().annotate(
+    #         author=Concat(
+    #             first_part, Value(' '), second_part, output_field=CharField())
+    #     ).filter(author__icontains=value).exclude('author')
 
-    def filter_author(self, queryset, name, value):
+    def filter_author(self, queryset, name, value):  # noqa
         if value:
             authors = Author.objects.all().annotate(
                 author=Concat(
@@ -37,7 +36,10 @@ class BookFilterSet(FilterSet):
             ).filter(author__icontains=value)
             if not authors.exists():
                 return Book.objects.none()
-            return reduce(lambda x, y: Q(x) | Q(y), list(queryset.filter(author__id=author.id) for author in authors))
+            return reduce(
+                lambda x, y: x.union(y, all=False),
+                list(queryset.filter(author__id=author.id) for author in authors)  # prefetch_related('author__id')
+            )
 
     @staticmethod
     def filter_genre(queryset, name, value):

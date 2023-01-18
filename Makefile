@@ -8,7 +8,7 @@ build:			## Build or rebuild services
 	docker-compose -f docker-compose-local.yml build
 
 up:				## Create and start containers
-	docker-compose -f docker-compose-local.yml up
+	docker-compose -f docker-compose-local.yml up -d
 
 start:			## Start services
 	docker-compose -f docker-compose-local.yml start
@@ -24,3 +24,9 @@ migrations:		## make migrations in running container
 
 migrate:		## apply migrations in running container
 	docker exec bookstore python manage.py migrate
+
+fill_db:		## fill database with test data
+	docker exec bookstore python manage.py create_data
+
+flush_db:		## delete all test data
+	docker exec bookstore python manage.py delete_data
