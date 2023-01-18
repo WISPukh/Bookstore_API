@@ -1,11 +1,11 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters
 from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination
 
 from .models import Book
 from .serializers import BookSerializer
 from bookstore.filtersets import BookFilterSet
+from bookstore.pagination import BookstorePagination
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -14,9 +14,9 @@ class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = BookFilterSet
-    pagination_class = PageNumberPagination
+    pagination_class = BookstorePagination
 
-    ordering_fields = ['title']
+    ordering = ['id']
 
     http_method_names = ['get', 'post', 'patch', 'delete']
 
@@ -36,7 +36,7 @@ class BookViewSet(viewsets.ModelViewSet):
         return Response(status=201, data=serializer.data)
 
     def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset()).filter()
+        queryset = self.paginate_queryset(self.filter_queryset(self.get_queryset()))
         serialized_items = self.serializer_class(list(queryset), many=True)
         return Response(status=200, data=serialized_items.data)
 

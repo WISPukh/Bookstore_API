@@ -1,6 +1,6 @@
 from functools import reduce
 
-from django.db.models import CharField, Value, Q, QuerySet
+from django.db.models import CharField, Value
 from django.db.models.functions import Concat
 from django_filters.rest_framework import CharFilter, NumberFilter
 from django_filters.rest_framework import FilterSet
@@ -38,11 +38,14 @@ class BookFilterSet(FilterSet):
                 return Book.objects.none()
             return reduce(
                 lambda x, y: x.union(y, all=False),
-                list(queryset.filter(author__id=author.id) for author in authors)  # prefetch_related('author__id')
+                list(queryset.filter(author__id=author.id) for author in authors)
             )
 
     @staticmethod
     def filter_genre(queryset, name, value):
         if value:
             genres = Genre.objects.filter(title__icontains=value)
-            return reduce(lambda x, y: Q(x) | Q(y), list(queryset.filter(genres__id=genre.id) for genre in genres))
+            return reduce(
+                lambda x, y: x.union(y, all=False),
+                list(queryset.filter(genres__id=genre.id) for genre in genres)
+            )
