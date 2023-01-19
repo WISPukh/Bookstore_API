@@ -1,7 +1,8 @@
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from .serializers import AuthorSerializer
+
 from .models import Author
+from .serializers import AuthorSerializer
 
 
 class AuthorViewSet(ModelViewSet):

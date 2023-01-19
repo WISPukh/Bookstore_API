@@ -21,13 +21,6 @@ class BookFilterSet(FilterSet):
         model = Book
         fields = ['title', 'release_date', 'price', 'author', 'genre']
 
-    # @staticmethod
-    # def name_concatenate(first_part: str, second_part: str, value: str) -> Optional[QuerySet]:
-    #     return Author.objects.all().annotate(
-    #         author=Concat(
-    #             first_part, Value(' '), second_part, output_field=CharField())
-    #     ).filter(author__icontains=value).exclude('author')
-
     def filter_author(self, queryset, name, value):  # noqa
         if value:
             authors = Author.objects.all().annotate(

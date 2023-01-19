@@ -6,7 +6,7 @@ from users.models import User
 
 class OrderService:
 
-    def list(self, user_pk, model, *args, **kwargs):
+    def list(self, user_pk, model, *args, **kwargs):  # noqa
         users_orders = model.objects.filter(
             user_id=user_pk,
             status__in=[
@@ -27,7 +27,7 @@ class OrderService:
 
         return data_to_serialize
 
-    def list_detail(self, order_id, model, user_pk):
+    def list_detail(self, order_id, model, user_pk):  # noqa
         return model.objects.get_total_orders_information(
             user_pk=user_pk, order_id=order_id
         )

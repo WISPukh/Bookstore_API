@@ -9,10 +9,9 @@ from books.models import Book
 from .models import Favorite
 from .serializers import (
     FavoriteSerializer,
-    SwaggerPutRepresentation,
     FavoriteCreateSerializer,
-    SwaggerCreateRepresentation,
 )
+from .swagger import SwaggerPutRepresentation, SwaggerCreateRepresentation
 
 
 class FavoriteViewSet(GenericViewSet, CreateModelMixin, DestroyModelMixin, ListModelMixin, RetrieveModelMixin):

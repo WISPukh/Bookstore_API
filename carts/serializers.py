@@ -21,7 +21,6 @@ class BaseCartSerializer(PrimitiveCartSerializer, CartAddressSerializer):  # noq
     orders_time = serializers.DateTimeField(read_only=True)
 
 
-
 class CartItemSerializer(BaseCartSerializer):  # noqa
     total_orders_price = serializers.IntegerField(read_only=True, required=False)
     price_discounted = serializers.IntegerField(read_only=True, required=False)
@@ -32,6 +31,7 @@ class CartSerializer(serializers.Serializer):  # noqa
     total = serializers.IntegerField(read_only=False)
     persons_discounted_price = serializers.IntegerField(read_only=False)
     products = ListSerializer(child=CartItemSerializer())
+
 
 class RepresentationCartUpdateSerializer(serializers.Serializer):  # noqa
     cart = serializers.ListSerializer(child=PrimitiveCartSerializer())

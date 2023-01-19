@@ -1,23 +1,22 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, filters
+from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
-from .models import Book
-from .serializers import BookSerializer
 from bookstore.filtersets import BookFilterSet
 from bookstore.pagination import BookstorePagination
+from .models import Book
+from .serializers import BookSerializer
 
 
-class BookViewSet(viewsets.ModelViewSet):
+class BookViewSet(ModelViewSet):
     model = Book
     queryset = model.objects.all()
     serializer_class = BookSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_class = BookFilterSet
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filterset_class = BookFilterSet  # noqa
     pagination_class = BookstorePagination
-
     ordering = ['id']
-
     http_method_names = ['get', 'post', 'patch', 'delete']
 
     def create(self, request, *args, **kwargs):

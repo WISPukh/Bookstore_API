@@ -1,33 +1,32 @@
 from django.db import transaction
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.mixins import (
     ListModelMixin, RetrieveModelMixin
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
 
 from books.models import Book
 from carts.models import Cart
-from carts.serializers import CartSerializer, CartItemSerializer, BaseCartSerializer, \
-    RepresentationCartUpdateSerializer, CartAddressSerializer
+from carts.serializers import (
+    CartSerializer, CartItemSerializer, BaseCartSerializer, RepresentationCartUpdateSerializer, CartAddressSerializer
+)
 from orders.serializers import OrderOuterSerializer
 from .errors import UnexpectedItemError
 from .services import CartsService
 
 
-class BaseViewSet(viewsets.GenericViewSet, ListModelMixin, RetrieveModelMixin):
-    def get_queryset(self):
-        return self.model.objects.all()
-
-
-class CartViewSet(BaseViewSet):
+class CartViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
     serializer_class = BaseCartSerializer
     model = Cart
     http_method_names = ['patch', 'get', 'post']
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.model.objects.all()
 
     @swagger_auto_schema(
         request_body=RepresentationCartUpdateSerializer,
@@ -70,11 +69,6 @@ class CartViewSet(BaseViewSet):
             )
         except UnexpectedItemError as e:
             return Response(status=400, data=e)
-        # TODO: Fix Celery
-        # else:
-        #     order_created.delay(
-        #         order_id=returned_data['products'][0]['order_id']
-        #     )
 
         serialized_datas = OrderOuterSerializer(returned_data, many=False)
 

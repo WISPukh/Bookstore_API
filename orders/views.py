@@ -12,12 +12,7 @@ from orders.serializers import OrderOuterSerializer, OrderIdSerializer
 from orders.services import OrderService
 
 
-class BaseOrderViewSet(GenericViewSet, ListModelMixin):
-    def get_queryset(self):
-        return self.model.objects.all()
-
-
-class OrderViewSet(BaseOrderViewSet):
+class OrderViewSet(GenericViewSet, ListModelMixin):
     serializer_class = OrderOuterSerializer
     model = Cart
     lookup_url_kwarg = 'orders_id'

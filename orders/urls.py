@@ -4,8 +4,6 @@ from rest_framework.routers import DefaultRouter
 from orders.views import OrderViewSet
 
 order_router = DefaultRouter()
-order_router.register('', OrderViewSet, basename='carts_purchase')
+order_router.register('', OrderViewSet, basename='order')
 
-urlpatterns = [
-    path('', include(order_router.urls)),
-]
+urlpatterns = order_router.urls

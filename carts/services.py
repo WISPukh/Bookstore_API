@@ -1,5 +1,5 @@
-import uuid
 from datetime import datetime
+from uuid import uuid4
 
 from books.models import Book
 from carts.errors import UnexpectedItemError
@@ -30,7 +30,7 @@ class CartsService:
 
         total_orders_price = model.objects.get_total_products_information(self.user.pk, ['CART'])
         items_objects = Book.objects.all()
-        personal_orders_id = uuid.uuid4()
+        personal_orders_id = uuid4()
         orders_time = datetime.now()
         city = data.get('city')
         address = data.get('address')
@@ -67,7 +67,7 @@ class CartsService:
 
         return returned_data
 
-    def update_cart(self, data, *args, **kwargs):
+    def update_cart(self, data, *args, **kwargs):  # noqa
         serializer = CartItemSerializer(data=data["cart"], many=True)
         serializer.is_valid(raise_exception=True)
 

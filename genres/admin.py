@@ -1,3 +1,10 @@
-from django.contrib import admin
+from django.contrib.admin import ModelAdmin, register
 
-# Register your models here.
+from .models import Genre
+
+
+@register(Genre)
+class GenreAdmin(ModelAdmin):
+    list_display = ('title', 'description', 'discount')
+    ordering = ('id', 'title')
+    search_fields = ('title',)

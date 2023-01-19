@@ -13,7 +13,7 @@ class CartManager(models.Manager):
 
     def total_price_discounted(self, user_pk, status):
 
-        for product in self.filter(user_id=user_pk, status__in=status).order_by('id').values():
+        for product in self.filter(user_id=user_pk, status__in=status).order_by('id').values():  # noqa
             new_price = Book.objects.get(
                 id=product['book_id']
             ).price_discounted
@@ -41,7 +41,7 @@ class CartManager(models.Manager):
 
     def set_discounted_price_inf(self, order_id, user_pk):
 
-        for product in self.filter(user_id=user_pk, order_id=order_id).order_by('id').values():
+        for product in self.filter(user_id=user_pk, order_id=order_id).order_by('id').values():  # noqa
             product_discounted_price = Book.objects.get(
                 id=product['book_id']).price_discounted
 

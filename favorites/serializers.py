@@ -1,6 +1,6 @@
 from typing import Union
 
-from rest_framework.serializers import ModelSerializer, IntegerField, Serializer, ListField
+from rest_framework.serializers import ModelSerializer, IntegerField
 
 from books.models import Book
 from books.serializers import BookSerializer
@@ -26,16 +26,3 @@ class FavoriteCreateSerializer(FavoriteSerializer):
     class Meta:
         model = Favorite
         fields = ('user_id', 'book_id',)
-
-
-class SwaggerListRepresentation(Serializer):  # noqa
-    favorite_item_id = IntegerField()
-    book = BookSerializer(many=True)
-
-
-class SwaggerPutRepresentation(Serializer):  # noqa
-    book_ids = ListField(child=IntegerField())
-
-
-class SwaggerCreateRepresentation(Serializer):  # noqa
-    book_id = IntegerField()

@@ -1,9 +1,9 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from books.models import Book
 from carts.managers import CartManager
 from users.models import User
-from books.models import Book
 
 
 class Cart(models.Model):

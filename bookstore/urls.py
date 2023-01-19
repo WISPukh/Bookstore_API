@@ -13,7 +13,7 @@ schema_view = get_schema_view(
     openapi.Info(
         title="Bookstore API",
         default_version='v1',
-        description="backend for internship",
+        description="BookStore API for Frontend internship",
         terms_of_service="https://swagger.io/terms/",
         contact=openapi.Contact(email="puhoff.ol@yandex.ru | aleksandr.boyushenko@gmail.com"),
         license=openapi.License(name="absolutely working license"),
@@ -37,12 +37,12 @@ urlpatterns = [
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 
     # apps
-    path('api/users/', include('users.urls')),
-    path('api/authors/', include('author.urls')),
-    path('api/books/', include('books.urls')),
-    path('api/genres/', include('genres.urls')),
-    path('api/carts/', include('carts.urls')),
-    path('api/orders/', include('orders.urls')),
+    path('api/user/', include('users.urls')),
+    path('api/author/', include('author.urls')),
+    path('api/book/', include('books.urls')),
+    path('api/genre/', include('genres.urls')),
+    path('api/cart/', include('carts.urls')),
+    path('api/order/', include('orders.urls')),
     path('api/favorite/', include('favorites.urls')),
 
 ]

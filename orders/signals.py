@@ -34,7 +34,3 @@ def update(sender, instance, update_fields, **kwargs):
                                 ).update(
                 status='AWAITING_PAYMENT'
             )
-
-            # order_created.delay(
-            #     order_id=order_awaiting_refill.order_id
-            # )
