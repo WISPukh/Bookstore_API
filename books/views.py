@@ -20,9 +20,7 @@ class BookViewSet(viewsets.ModelViewSet):
 
     http_method_names = ['get', 'post', 'patch', 'delete']
 
-
     def create(self, request, *args, **kwargs):
-
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         data_to_create = serializer.data
@@ -33,12 +31,11 @@ class BookViewSet(viewsets.ModelViewSet):
         new_book.author.set(authors_ids)
         new_book.save()
 
-        return Response(status=201, data=serializer.data)
+        return Response(status=201, data=self.serializer_class(new_book).data)
 
     def list(self, request, *args, **kwargs):
         queryset = self.paginate_queryset(self.filter_queryset(self.get_queryset()))
-        serialized_items = self.serializer_class(list(queryset), many=True)
-        return Response(status=200, data=serialized_items.data)
+        return self.get_paginated_response(queryset)
 
     def update(self, request, *args, **kwargs):
         if not self.request.user.is_superuser:

@@ -13,3 +13,16 @@ class BookSerializer(serializers.Serializer):   # noqa
     genres = serializers.ListSerializer(child=serializers.PrimaryKeyRelatedField(queryset=Genre.objects.all()))
     author = serializers.ListSerializer(child=serializers.PrimaryKeyRelatedField(queryset=Author.objects.all()))
     release_date = serializers.DateField(required=False)
+
+
+class PaginationLinksBookSerializer(serializers.Serializer):
+    next = serializers.URLField(read_only=True)
+    previous = serializers.URLField(read_only=True)
+
+
+class PaginationBookSerializer(serializers.Serializer):
+    links = PaginationLinksBookSerializer()
+    total_pages = serializers.IntegerField(read_only=True)
+    page = serializers.IntegerField(read_only=True)
+    page_size = serializers.IntegerField(read_only=True)
+    result = serializers.ListSerializer(child=BookSerializer())
