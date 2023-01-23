@@ -1,23 +1,27 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
-from rest_framework.mixins import CreateModelMixin, DestroyModelMixin, ListModelMixin, RetrieveModelMixin
+from rest_framework.mixins import CreateModelMixin, DestroyModelMixin, RetrieveModelMixin
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from books.models import Book
+from bookstore.mixins import PaginationViewSetMixin
 from .models import Favorite
 from .serializers import (
     FavoriteSerializer,
-    FavoriteCreateSerializer,
+    FavoriteCreateSerializer, PaginationFavoriteSerializer,
 )
 from .swagger import SwaggerPutRepresentation, SwaggerCreateRepresentation
 
 
-class FavoriteViewSet(GenericViewSet, CreateModelMixin, DestroyModelMixin, ListModelMixin, RetrieveModelMixin):
+class FavoriteViewSet(PaginationViewSetMixin, GenericViewSet, CreateModelMixin, DestroyModelMixin, RetrieveModelMixin):
     serializer_class = FavoriteSerializer
+    pagination_serializer_class = PaginationFavoriteSerializer
     model = Favorite
     http_method_names = ['get', 'post', 'put', 'delete']
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return self.model.objects.filter(user_id=self.request.user.id)
@@ -25,8 +29,10 @@ class FavoriteViewSet(GenericViewSet, CreateModelMixin, DestroyModelMixin, ListM
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset().values('book_id')
         book_ids = list(element['book_id'] for element in queryset)
+        queryset = self.paginate_queryset(list(self.model.objects.filter(book_id__in=book_ids)))
+        self.pagination_class.serializer_class = self.pagination_serializer_class
 
-        return Response(FavoriteSerializer(list(self.model.objects.filter(book_id__in=book_ids)), many=True).data)
+        return self.get_paginated_response(queryset)
 
     @swagger_auto_schema(
         request_body=SwaggerPutRepresentation, responses={200: openapi.Response('', schema=FavoriteSerializer)}
