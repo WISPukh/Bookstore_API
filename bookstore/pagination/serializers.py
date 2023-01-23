@@ -7,6 +7,7 @@ class PaginationLinksSerializer(serializers.Serializer):  # noqa
 
 class PaginationSerializer(serializers.Serializer):  # noqa
     links = PaginationLinksSerializer()
+    total_items = serializers.IntegerField(read_only=True)
     total_pages = serializers.IntegerField(read_only=True)
     page = serializers.IntegerField(read_only=True)
     page_size = serializers.IntegerField(read_only=True)
