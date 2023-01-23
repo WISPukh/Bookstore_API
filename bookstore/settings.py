@@ -108,7 +108,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-JWT_AUTH = bool(os.environ.get('JWT_AUTH', False))
+JWT_AUTH = bool(int(os.environ.get('JWT_AUTH', False)))
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
