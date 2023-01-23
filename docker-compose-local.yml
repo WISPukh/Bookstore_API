@@ -17,6 +17,7 @@ services:
     container_name: bookstore
     build: .
     command: bash entrypoint.sh
+    platform: linux/amd64
     volumes:
       - .:/code
     ports:

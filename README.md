@@ -33,7 +33,7 @@ cp .env.example .env
 - In order to enable JWT Authorization, edit your variable in .env file to make it look like this
 
 ```dotenv
-JWT_AUTH=True
+JWT_AUTH=1
 ```
 
 - In order to change token lifetime, edit your variable in .env file to make it look like this
