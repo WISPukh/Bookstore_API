@@ -4,18 +4,18 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from bookstore.filtersets import BookFilterSet
-from bookstore.pagination import BookstorePagination
+from bookstore.mixins import PaginationViewSetMixin
 from .models import Book
-from .serializers import BookSerializer
+from .serializers import BookSerializer, PaginationBookSerializer
 
 
-class BookViewSet(ModelViewSet):
+class BookViewSet(PaginationViewSetMixin, ModelViewSet):
     model = Book
     queryset = model.objects.all()
     serializer_class = BookSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = BookFilterSet  # noqa
-    pagination_class = BookstorePagination
+    pagination_serializer_class = PaginationBookSerializer
     ordering = ['id']
     http_method_names = ['get', 'post', 'patch', 'delete']
 
@@ -31,10 +31,6 @@ class BookViewSet(ModelViewSet):
         new_book.save()
 
         return Response(status=201, data=self.serializer_class(new_book).data)
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.paginate_queryset(self.filter_queryset(self.get_queryset()))
-        return self.get_paginated_response(queryset)
 
     def update(self, request, *args, **kwargs):
         if not self.request.user.is_superuser:

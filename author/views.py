@@ -1,12 +1,14 @@
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from bookstore.mixins import PaginationViewSetMixin
 from .models import Author
-from .serializers import AuthorSerializer
+from .serializers import AuthorSerializer, PaginationAuthorSerializer
 
 
-class AuthorViewSet(ModelViewSet):
+class AuthorViewSet(PaginationViewSetMixin, ModelViewSet):
     serializer_class = AuthorSerializer
+    pagination_serializer_class = PaginationAuthorSerializer
     http_method_names = ['get', 'patch', 'delete', 'post']
 
     def get_queryset(self):

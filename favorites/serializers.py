@@ -1,9 +1,10 @@
 from typing import Union
 
-from rest_framework.serializers import ModelSerializer, IntegerField
+from rest_framework.serializers import ModelSerializer, IntegerField, ListSerializer
 
 from books.models import Book
 from books.serializers import BookSerializer
+from bookstore.pagination.serializers import PaginationSerializer
 from .models import Favorite
 
 
@@ -26,3 +27,7 @@ class FavoriteCreateSerializer(FavoriteSerializer):
     class Meta:
         model = Favorite
         fields = ('user_id', 'book_id',)
+
+
+class PaginationFavoriteSerializer(PaginationSerializer):  # noqa
+    result = ListSerializer(child=FavoriteSerializer())
