@@ -45,7 +45,18 @@ JWT_AUTH=1
 ACCESS_TOKEN_LIFETIME=1
 REFRESH_TOKEN_LIFETIME=24
 ```
-
+## IMPORTANT
+If You have pulled project and changes were made on origin, to make sure that **everything** is up-to-date run this command
+(deletes previous versions of images, containers, volumes and network):
+```bash
+make clear_docker_files
+```
+After that just build and run project with:
+```bash
+make build
+make up
+```
+Or simply use command **_make up_** that does same thing
 ### Launch API
 
 - To build and up docker containers for API run the command
