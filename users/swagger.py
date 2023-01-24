@@ -7,4 +7,4 @@ class SwaggerCreateUserRepresentation(Serializer):  # noqa
 
 
 class SwaggerUserExistsRepresentation(Serializer):  # noqa
-    result = BooleanField()
+    is_available = BooleanField()

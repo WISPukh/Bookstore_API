@@ -32,4 +32,4 @@ class UsersViewSet(CreateModelMixin, GenericViewSet):
     @action(methods=['get'], detail=False, url_path='available')
     def exists(self, request, *args, **kwargs):
         email = self.request.query_params.get('email')
-        return Response(not self.model.objects.filter(email=email).exists())
+        return Response({'is_available': not self.model.objects.filter(email=email).exists()})
