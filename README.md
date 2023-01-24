@@ -35,6 +35,8 @@ cp .env.example .env
 ```dotenv
 JWT_AUTH=1
 ```
+- To authorize, in swagger click **authorize** and type:
+```Bearer <and here is your token>```
 
 - In order to change token lifetime, edit your variable in .env file to make it look like this
 
