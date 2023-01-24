@@ -10,6 +10,7 @@ class PrimitiveCartSerializer(serializers.Serializer):  # noqa
 class CartAddressSerializer(serializers.Serializer):  # noqa
     city = serializers.CharField(required=False)
     address = serializers.CharField(required=False)
+    zipcode = serializers.CharField(required=False)
 
 
 class BaseCartSerializer(PrimitiveCartSerializer, CartAddressSerializer):  # noqa
