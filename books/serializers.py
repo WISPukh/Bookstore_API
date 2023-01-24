@@ -18,3 +18,8 @@ class BookSerializer(serializers.Serializer):  # noqa
 
 class PaginationBookSerializer(PaginationSerializer):  # noqa
     result = serializers.ListSerializer(child=BookSerializer())
+
+
+class ShortBookSerializer(serializers.Serializer):  # noqa
+    id = serializers.IntegerField(read_only=True)
+    title = serializers.CharField()

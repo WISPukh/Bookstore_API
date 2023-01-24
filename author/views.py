@@ -1,9 +1,11 @@
+from rest_framework.decorators import action
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from bookstore.mixins import PaginationViewSetMixin
 from .models import Author
-from .serializers import AuthorSerializer, PaginationAuthorSerializer
+from .serializers import AuthorSerializer, PaginationAuthorSerializer, SuggestionList
 
 
 class AuthorViewSet(PaginationViewSetMixin, ModelViewSet):
@@ -14,9 +16,17 @@ class AuthorViewSet(PaginationViewSetMixin, ModelViewSet):
     def get_queryset(self):
         return Author.objects.all()
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        response_data = self.serializer_class(instance=instance).data
-        self.perform_destroy(instance)
 
-        return Response(response_data, status=200)
+class AuthorSuggestionViewSet(GenericViewSet):
+    serializer_class = SuggestionList
+    filter_backends = [SearchFilter]
+    search_fields = ['first_name', 'second_name']
+    http_method_names = ['get']
+
+    def get_queryset(self):
+        return Author.objects.all()
+
+    @action(methods=['get'], detail=False, url_path='suggestion')
+    def get_list_short(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        return Response(self.serializer_class(queryset, many=True).data, status=200)
