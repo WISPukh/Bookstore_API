@@ -14,6 +14,7 @@ class BookSerializer(serializers.Serializer):  # noqa
     genres = serializers.ListSerializer(child=serializers.PrimaryKeyRelatedField(queryset=Genre.objects.all()))
     author = serializers.ListSerializer(child=serializers.PrimaryKeyRelatedField(queryset=Author.objects.all()))
     release_date = serializers.DateField(required=False)
+    writing_date = serializers.DateField(required=False)
 
 
 class PaginationBookSerializer(PaginationSerializer):  # noqa

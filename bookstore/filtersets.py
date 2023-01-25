@@ -2,8 +2,7 @@ from functools import reduce
 
 from django.db.models import CharField, Value
 from django.db.models.functions import Concat
-from django_filters.rest_framework import CharFilter, NumberFilter
-from django_filters.rest_framework import FilterSet
+from django_filters.rest_framework import FilterSet, CharFilter, NumberFilter, DateFilter
 
 from author.models import Author
 from books.models import Book
@@ -14,12 +13,20 @@ class BookFilterSet(FilterSet):
     author = CharFilter(method='filter_author')
     genre = CharFilter(method='filter_genre')
     price = NumberFilter()
-    price__gt = NumberFilter(field_name='price', lookup_expr='gt')
-    price__lt = NumberFilter(field_name='price', lookup_expr='lt')
+    price_gte = NumberFilter(field_name='price', lookup_expr='gte')
+    price_lte = NumberFilter(field_name='price', lookup_expr='lte')
+    release_date = DateFilter()
+    release_date_lte = DateFilter(field_name='release_date', lookup_expr='lte')
+    release_date_gte = DateFilter(field_name='release_date', lookup_expr='gte')
+    writing_date = DateFilter()
+    writing_date_lte = DateFilter(field_name='writing_date', lookup_expr='lte')
+    writing_date_gte = DateFilter(field_name='writing_date', lookup_expr='gte')
 
     class Meta:
         model = Book
-        fields = ['title', 'release_date', 'price', 'author', 'genre']
+        fields = [
+            'title', 'release_date', 'writing_date', 'price', 'author', 'genre'
+        ]
 
     def filter_author(self, queryset, name, value):  # noqa
         if value:
