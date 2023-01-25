@@ -16,7 +16,10 @@ class BookViewSet(PaginationViewSetMixin, ModelViewSet):
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = BookFilterSet  # noqa
     pagination_serializer_class = PaginationBookSerializer
-    ordering = ['id']
+    OrderingFilter.ordering_description = (
+        f'Takes field name: title or -title for example. '
+        f'Applies to fields: {", ".join(serializer_class.get_fields(serializer_class()))}'
+    )
     http_method_names = ['get', 'post', 'patch', 'delete']
 
     def create(self, request, *args, **kwargs):
