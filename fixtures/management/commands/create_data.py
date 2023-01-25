@@ -1,3 +1,4 @@
+from datetime import timedelta
 from random import randint, choice
 
 from django.core.management.base import BaseCommand
@@ -46,7 +47,7 @@ class BookFactory(DjangoModelFactory):
     title = Faker('name')
     description = Faker('text')
     price = Sequence(lambda _: get_price())
-    release_date = Faker('date')
+    release_date = Faker('date_object')
 
 
 class Command(BaseCommand):
@@ -56,7 +57,10 @@ class Command(BaseCommand):
         for i in range(100):
             book = BookFactory()
             book.genres.add(choice(genres))
+            book.writing_date = book.release_date - timedelta(days=randint(365, 365 * 3), weeks=randint(10, 40))
 
             # book can have no authors or more than 3
             for j in range(randint(0, 3)):
                 book.author.add(choice(authors))
+
+            book.save()
