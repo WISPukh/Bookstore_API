@@ -47,6 +47,13 @@ class Book(models.Model):
         verbose_name=_('Date of release')
     )
 
+    writing_date = models.DateField(
+        auto_now=False,
+        auto_now_add=False,
+        default=date.today,
+        verbose_name=_('Date of writing')
+    )
+
     def __str__(self):
         return str(self.title)
 
