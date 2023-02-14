@@ -159,11 +159,10 @@ docker network rm bookstore_api_default
 docker system prune -f
 ```
 
-
 ---
 
 ## Prod.by
 
 + [Boyushenko Aleksandr :shipit: :call_me_hand: :man_technologist:](https://t.me/SandrSX)
 
-+ [Puchov Oleg :trollface: :exploding_head: :octocat:](https://t.me/JustFinn363)
++ [Pukhov Oleg :trollface: :exploding_head: :octocat:](https://t.me/JustFinn363)
