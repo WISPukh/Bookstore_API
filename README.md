@@ -97,6 +97,70 @@ password: admin
      - [http://localhost:8000/redoc/](http://localhost:8000/redoc/)
 
 ---
+# WINDOWS TROUBLESHOOTING 
+Make commands don't work on Windows and there is no lightweight and easy to use analogy,
+so here goes all docker commands that you will need:
+
++ Start API:
+```bash
+docker-compose -f docker-compose-local.yml up -d
+```
+
++ Build or rebuild services
+```bash
+ docker-compose -f docker-compose-local.yml build
+ ```
++ Create and start containers
+```bash
+docker-compose -f docker-compose-local.yml up -d
+```
++ Start services
+```bash 
+docker-compose -f docker-compose-local.yml start
+```
++ Stop services
+```bash
+ docker-compose -f docker-compose-local.yml stop
+ ```
+
++ Stop and remove containers, networks, images, and volumes
+```bash 
+docker-compose -f docker-compose-local.yml down
+```
+
++ Make migrations in running container
+```bash
+docker exec bookstore python manage.py makemigrations
+```
+
++ Apply migrations in running container
+```bash
+docker exec bookstore python manage.py migrate
+```
+
++ Fill database with test data
+```bash
+docker exec bookstore python manage.py create_data
+```
+
++ Delete all test data
+```bash
+docker exec bookstore python manage.py delete_data
+```
+
++ Delete images, volumes, containers, network for current project
+
+_**yes, copy and past all of it in terminal**_
+```bash
+docker rm bookstore db
+docker image rm bookstore_api-bookstore
+docker volume rm bookstore_api_pg_data
+docker network rm bookstore_api_default
+docker system prune -f
+```
+
+
+---
 
 ## Prod.by
 
