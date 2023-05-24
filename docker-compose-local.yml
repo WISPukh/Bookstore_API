@@ -16,6 +16,7 @@ services:
   bookstore:
     container_name: bookstore
     build: .
+    restart: always
     command: bash entrypoint.sh
     platform: linux/amd64
     volumes:
