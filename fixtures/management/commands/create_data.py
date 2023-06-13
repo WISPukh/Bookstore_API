@@ -34,7 +34,7 @@ class GenreFactory(DjangoModelFactory):
     class Meta:
         model = Genre
 
-    title = Faker('name')
+    title = Faker('sentence', nb_words=4)
     description = Faker('text')
     discount = Sequence(lambda _: get_discount())
 
@@ -44,7 +44,7 @@ class BookFactory(DjangoModelFactory):
         model = Book
 
     in_stock = Sequence(lambda _: get_in_stock())
-    title = Faker('name')
+    title = Faker('sentence', nb_words=4)
     description = Faker('text')
     price = Sequence(lambda _: get_price())
     release_date = Faker('date_object')
@@ -52,8 +52,8 @@ class BookFactory(DjangoModelFactory):
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        authors = [AuthorFactory() for _ in range(100)]
-        genres = [GenreFactory() for _ in range(100)]
+        authors = AuthorFactory.create_batch(100)
+        genres = GenreFactory.create_batch(100)
         for i in range(100):
             book = BookFactory()
             book.genres.add(choice(genres))

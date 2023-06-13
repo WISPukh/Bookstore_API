@@ -13,11 +13,10 @@ class BookstorePagination(PageNumberPagination):
 
     def get_paginated_response(self, data):
         self.page_size = int(self.request.query_params.get('page_size', self.page_size))
-
         return Response(data=self.serializer_class({
             'links': {
-                'next': self.get_next_link() if self.page.has_next() else None,
-                'previous': self.get_previous_link() if self.page.has_previous() else None
+                'next': self.to_https(self.get_next_link()) if self.page.has_next() else None,
+                'previous': self.to_https(self.get_previous_link()) if self.page.has_previous() else None
             },
             'total_items': self.page.paginator.count,
             'total_pages': ceil(self.page.paginator.count / self.page_size),
@@ -25,3 +24,7 @@ class BookstorePagination(PageNumberPagination):
             'page_size': self.page_size,
             'result': data
         }).data, status=status.HTTP_200_OK)
+
+    @staticmethod
+    def to_https(url: str) -> str:
+        return url.replace('http', 'https')

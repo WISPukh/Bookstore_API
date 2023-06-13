@@ -12,7 +12,7 @@ class BookSerializer(serializers.Serializer):  # noqa
     description = serializers.CharField(required=False)
     price = serializers.IntegerField(required=False, default=200)
     genres = serializers.ListSerializer(child=serializers.PrimaryKeyRelatedField(queryset=Genre.objects.all()))
-    author = serializers.ListSerializer(child=serializers.PrimaryKeyRelatedField(queryset=Author.objects.all()))
+    author = serializers.ListSerializer(child=serializers.PrimaryKeyRelatedField(queryset=Genre.objects.all()))
     release_date = serializers.DateField(required=False)
     writing_date = serializers.DateField(required=False)
 

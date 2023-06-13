@@ -10,10 +10,17 @@ load_dotenv()
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_FOR', 'https')
+
 DEBUG = bool(os.environ.get('DEBUG'))
 
-if not DEBUG:
-    ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(' ')
+#if DEBUG:
+#    ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(' ')
+ALLOWED_HOSTS = ['*'] #os.environ.get("DJANGO_ALLOWED_HOSTS").split(' ')
+
+CSRF_TRUSTED_ORIGINS = ['https://bookstore-api.verdgil.org'] #, 'http://localhost:*']
+
+CSRF_COOKIE_SECURE = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -26,6 +33,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'django_filters',
     'drf_yasg',  # noqa
+    'corsheaders',
 
     # apps
     'users',
@@ -41,12 +49,15 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'bookstore.urls'
 
@@ -128,7 +139,7 @@ REFRESH_TOKEN_LIFETIME = int(os.environ.get('REFRESH_TOKEN_LIFETIME', 72))
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=ACCESS_TOKEN_LIFETIME),
     'REFRESH_TOKEN_LIFETIME': timedelta(hours=REFRESH_TOKEN_LIFETIME),
-    'ROTATE_REFRESH_TOKENS': False,
+    'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': False,
     'UPDATE_LAST_LOGIN': False,
 
