@@ -67,13 +67,13 @@ class Cart(models.Model):
     city = models.CharField(
         'Delivery city',
         max_length=100,
-        default='12345'
+        null=True,
     )
 
     address = models.CharField(
         'Delivery address',
         max_length=250,
-        default='12345'
+        null=True,
     )
 
     total_orders_price = models.IntegerField(

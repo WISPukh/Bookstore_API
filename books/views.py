@@ -18,7 +18,7 @@ class BookViewSet(PaginationViewSetMixin, ModelViewSet):
     pagination_serializer_class = PaginationBookSerializer
     OrderingFilter.ordering_description = (
         f'Takes field name: title or -title for example. '
-        f'Applies to fields: {", ".join(serializer_class.get_fields(serializer_class()))}'
+        f'Applies to fields: {", ".join(serializer_class().get_fields())}'
     )
     http_method_names = ['get', 'post', 'patch', 'delete']
 

@@ -14,11 +14,9 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_FOR', 'https')
 
 DEBUG = bool(os.environ.get('DEBUG'))
 
-#if DEBUG:
-#    ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(' ')
-ALLOWED_HOSTS = ['*'] #os.environ.get("DJANGO_ALLOWED_HOSTS").split(' ')
+ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['https://bookstore-api.verdgil.org'] #, 'http://localhost:*']
+CSRF_TRUSTED_ORIGINS = ['https://bookstore-api.verdgil.org']
 
 CSRF_COOKIE_SECURE = True
 

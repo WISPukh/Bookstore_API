@@ -37,4 +37,3 @@ class UsersViewSet(CreateModelMixin, GenericViewSet):
     @action(methods=['get'], detail=False, url_path='me', permission_classes=[IsAuthenticated])
     def get_object(self, request, *args, **kwargs):
         return Response(self.serializer_class(self.request.user).data)
-

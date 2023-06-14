@@ -72,24 +72,16 @@ class CartsService:
         serializer.is_valid(raise_exception=True)
 
         data = data["cart"]
-        item_in_cart = Cart.objects.filter(status="CART", user_id=self.user.pk)
         returned_data = []
 
         for item in data:
-            product = item_in_cart.filter(book_id=item['book_id'])
-
-            if item["amount"] == 0 and product.exists():
-                product.delete()
+            if item["amount"] == 0:
                 continue
 
-            if item["amount"] == 0 and not product.exists():
-                continue
-
-            found_item, is_created = Cart.objects.get_or_create(
+            found_item, _ = Cart.objects.get_or_create(
                 status='CART',
                 book_id=item['book_id'],
                 user_id=self.user.pk,
-                warranty_days=14
             )
 
             found_item.amount = item["amount"]
@@ -97,3 +89,26 @@ class CartsService:
             returned_data.append(found_item)
 
         return returned_data
+
+    @staticmethod
+    def single_update(book, data):
+        amount = data.get('amount')
+        cart = Cart.objects.get(book_id=book.id)
+        cart.amount = amount
+        cart.save()
+        return cart
+
+    def add_to_cart(self, book, data):
+        amount = data.get('amount')
+
+        cart, is_created = Cart.objects.get_or_create(
+            user_id=self.user.pk,
+            book_id=book.id,
+        )
+        if is_created:
+            cart.amount = amount
+        else:
+            cart.amount += amount
+        cart.save()
+        cart.refresh_from_db()
+        return cart

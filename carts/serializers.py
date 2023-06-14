@@ -7,6 +7,10 @@ class PrimitiveCartSerializer(serializers.Serializer):  # noqa
     amount = serializers.IntegerField(required=True)
 
 
+class AmountForCartSerializer(serializers.Serializer):  # noqa
+    amount = serializers.IntegerField()
+
+
 class CartAddressSerializer(serializers.Serializer):  # noqa
     city = serializers.CharField(required=False)
     address = serializers.CharField(required=False)

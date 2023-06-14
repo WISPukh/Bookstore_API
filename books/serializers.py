@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from author.models import Author
 from bookstore.pagination.serializers import PaginationSerializer
 from genres.models import Genre
 
@@ -24,3 +23,8 @@ class PaginationBookSerializer(PaginationSerializer):  # noqa
 class ShortBookSerializer(serializers.Serializer):  # noqa
     id = serializers.IntegerField(read_only=True)
     title = serializers.CharField()
+
+
+class AddToCardSerializer(serializers.Serializer):  # noqa
+    book_id = serializers.IntegerField()
+    amount = serializers.IntegerField()
