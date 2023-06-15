@@ -2,10 +2,9 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from geopy.geocoders import Nominatim
 from rest_framework.decorators import action
-from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from books.models import Book
 from books.serializers import AddToCardSerializer
@@ -37,9 +36,7 @@ class CartViewSet(GenericViewSet):
         return Response({'is_valid': geolocator.geocode(zipcode).raw['display_name'].split()[-1] == 'Россия'})
 
 
-class CartItemsViewSet(
-    ListModelMixin, CreateModelMixin, DestroyModelMixin, GenericViewSet, UpdateModelMixin
-):
+class CartItemsViewSet(ModelViewSet):
     model = Cart
     queryset = model.objects.all()
     serializer_class = BaseCartSerializer
@@ -88,6 +85,7 @@ class CartItemsViewSet(
         amount = int(self.request.data.get('amount'))
         book = self.model.objects.filter(user_id=request.user.pk, status='CART', **kwargs).first()
 
+        # TODO: make this a validation function
         if book is None:
             return Response(status=400, data={'error': f"Book with id: {kwargs.get('book_id')} doesn't exist in cart!"})
 
@@ -110,6 +108,7 @@ class CartItemsViewSet(
         if not items_in_cart:
             return Response(status=400, data={'error': 'Cart is empty!'})
 
+        # TODO: remake using select related
         ids_not_in_cart = []
         for item in self.request.data.get('cart'):
             book_id = item.get('book_id')
