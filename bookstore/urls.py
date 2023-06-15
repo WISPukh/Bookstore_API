@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path, re_path, include
 from drf_yasg import openapi
@@ -18,7 +19,7 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="puhoff.ol@yandex.ru | aleksandr.boyushenko@gmail.com"),
         license=openapi.License(name="absolutely working license"),
     ),
-    url='https://bookstore-api.verdgil.org/',
+    url=settings.URL,
     public=True,
     permission_classes=[permissions.AllowAny],
 )

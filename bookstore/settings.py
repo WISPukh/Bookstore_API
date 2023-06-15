@@ -10,15 +10,18 @@ load_dotenv()
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_FOR', 'https')
-
-DEBUG = bool(os.environ.get('DEBUG'))
+DEBUG = bool(int(os.environ.get('DEBUG')))
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['https://bookstore-api.verdgil.org']
+URL = None
 
-CSRF_COOKIE_SECURE = True
+if not DEBUG:
+    URL = 'https://bookstore-api.verdgil.org'
+    CSRF_TRUSTED_ORIGINS = [URL]
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_FOR', 'https')
+    CSRF_COOKIE_SECURE = True
+    CORS_ALLOW_ALL_ORIGINS = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -54,8 +57,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'bookstore.urls'
 

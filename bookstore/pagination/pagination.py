@@ -1,5 +1,6 @@
 from math import ceil
 
+from django.conf import settings
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -13,10 +14,18 @@ class BookstorePagination(PageNumberPagination):
 
     def get_paginated_response(self, data):
         self.page_size = int(self.request.query_params.get('page_size', self.page_size))
+        next_link = self.get_next_link() if self.page.has_next() else None
+        previous_link = self.get_previous_link() if self.page.has_previous() else None
+
+        # django's paginator and filters is a black magic, normal way of fixing it unfortunately doesn't work
+        if not settings.DEBUG:
+            next_link = self.to_https(next_link)
+            previous_link = self.to_https(previous_link)
+
         return Response(data=self.serializer_class({
             'links': {
-                'next': self.to_https(self.get_next_link()) if self.page.has_next() else None,
-                'previous': self.to_https(self.get_previous_link()) if self.page.has_previous() else None
+                'next': next_link,
+                'previous': previous_link
             },
             'total_items': self.page.paginator.count,
             'total_pages': ceil(self.page.paginator.count / self.page_size),
