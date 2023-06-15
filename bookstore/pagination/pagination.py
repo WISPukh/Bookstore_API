@@ -19,8 +19,8 @@ class BookstorePagination(PageNumberPagination):
 
         # django's paginator and filters is a black magic, normal way of fixing it unfortunately doesn't work
         if not settings.DEBUG:
-            next_link = self.to_https(next_link)
-            previous_link = self.to_https(previous_link)
+            next_link = self.to_https(next_link) if next_link is not None else None
+            previous_link = self.to_https(previous_link) if previous_link is not None else None
 
         return Response(data=self.serializer_class({
             'links': {
