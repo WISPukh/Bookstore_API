@@ -90,10 +90,9 @@ class CartsService:
 
         return returned_data
 
-    @staticmethod
-    def single_update(book, data):
+    def single_update(self, book, data):
         amount = data.get('amount')
-        cart = Cart.objects.get(book_id=book.id)
+        cart = Cart.objects.get(book_id=book.id, user_id=self.user.id)
         cart.amount = amount
         cart.save()
         return cart
@@ -110,5 +109,5 @@ class CartsService:
         else:
             cart.amount += amount
         cart.save()
-        cart.refresh_from_db()
+
         return cart
