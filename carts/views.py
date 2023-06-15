@@ -79,15 +79,17 @@ class CartItemsViewSet(
         return Response(CartItemSerializer(instance).data)
 
     @swagger_auto_schema(
-        request_body=AmountForCartSerializer,
-        responses={'200': openapi.Response(description='Cart List', schema=CartItemSerializer)}
+        request_body=AmountForCartSerializer, responses={
+            200: openapi.Response(description='Cart List', schema=CartItemSerializer),
+            400: openapi.Response(description='Book is not in cart or amount is not positive number')
+        }
     )
     def partial_update(self, request, *args, **kwargs):
         amount = int(self.request.data.get('amount'))
-        book = Book.objects.filter(pk=kwargs.get('book_id')).first()
+        book = self.model.objects.filter(**kwargs).first()
 
         if book is None:
-            return Response(status=400, data={'error': f"Book with id: {kwargs.get('book_id')} doesn't exist!"})
+            return Response(status=400, data={'error': f"Book with id: {kwargs.get('book_id')} doesn't exist in cart!"})
 
         if amount < 1:
             return Response(status=400, data={'error': 'amount should be a positive number!'})
