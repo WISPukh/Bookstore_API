@@ -122,7 +122,7 @@ class CartItemsViewSet(
         return Response(status=200, data=CartItemSerializer(datas, many=True).data)
 
     @swagger_auto_schema(responses={
-        200: openapi.Response('Successfully deleted book from cart'),
+        204: openapi.Response('Successfully deleted book from cart'),
         400: openapi.Response('Provided invalid book_id')
     })
     def destroy(self, request, *args, **kwargs):

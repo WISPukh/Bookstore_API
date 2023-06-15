@@ -18,10 +18,15 @@ class UsersViewSet(CreateModelMixin, GenericViewSet):
     http_method_names = ['post', 'get']
 
     @swagger_auto_schema(
-        request_body=SwaggerCreateUserRepresentation, responses={200: openapi.Response('', schema=serializer_class)}
+        request_body=SwaggerCreateUserRepresentation, responses={
+            200: openapi.Response('', schema=serializer_class),
+            400: openapi.Response('Duplicate of account')
+        }
     )
     def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+        if not self.check_user_exists(email=request.data.get('email')):
+            return super().create(request, *args, **kwargs)
+        return Response(status=400, data={'error': 'Account with this email already exists!'})
 
     @swagger_auto_schema(
         manual_parameters=[openapi.Parameter('email', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)],
@@ -31,9 +36,11 @@ class UsersViewSet(CreateModelMixin, GenericViewSet):
     )
     @action(methods=['get'], detail=False, url_path='available')
     def exists(self, request, *args, **kwargs):
-        email = self.request.query_params.get('email')
-        return Response({'is_available': not self.model.objects.filter(email=email).exists()})
+        return Response({'is_available': self.check_user_exists(email=request.data.get('email'))})
 
     @action(methods=['get'], detail=False, url_path='me', permission_classes=[IsAuthenticated])
     def get_object(self, request, *args, **kwargs):
         return Response(self.serializer_class(self.request.user).data)
+
+    def check_user_exists(self, email: str) -> bool:
+        return self.model.objects.filter(email=email).exists()
