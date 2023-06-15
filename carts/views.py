@@ -86,7 +86,7 @@ class CartItemsViewSet(
     )
     def partial_update(self, request, *args, **kwargs):
         amount = int(self.request.data.get('amount'))
-        book = self.model.objects.filter(**kwargs).first()
+        book = self.model.objects.filter(user_id=request.user.pk, status='CART', **kwargs).first()
 
         if book is None:
             return Response(status=400, data={'error': f"Book with id: {kwargs.get('book_id')} doesn't exist in cart!"})
@@ -94,7 +94,7 @@ class CartItemsViewSet(
         if amount < 1:
             return Response(status=400, data={'error': 'amount should be a positive number!'})
 
-        service = CartsService(user=self.request.user, model=Book)
+        service = CartsService(user=self.request.user, model=self.model)
         instance = service.single_update(book, data=self.request.data)
         return Response(status=200, data=self.serializer_class(instance).data)
 
@@ -105,7 +105,7 @@ class CartItemsViewSet(
     )
     @action(methods=['patch'], detail=False, url_path='bulk')
     def patch(self, request, *args, **kwargs):
-        items_in_cart = self.model.objects.filter(status='CART')
+        items_in_cart = self.model.objects.filter(user_id=request.user.pk, status='CART')
 
         if not items_in_cart:
             return Response(status=400, data={'error': 'Cart is empty!'})
@@ -129,7 +129,7 @@ class CartItemsViewSet(
     })
     def destroy(self, request, *args, **kwargs):
         # for instance: kwargs={'book_id': '40'}
-        book = self.model.objects.filter(**kwargs).first()
+        book = self.model.objects.filter(user_id=request.user.pk, status='CART', **kwargs).first()
         if not book:
             return Response(status=400, data={'error': "You can't delete book that you don't have in cart!"})
         book.delete()

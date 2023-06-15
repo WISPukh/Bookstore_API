@@ -92,7 +92,7 @@ class CartsService:
 
     def single_update(self, book, data):
         amount = data.get('amount')
-        cart = Cart.objects.get(book_id=book.id, user_id=self.user.id)
+        cart = Cart.objects.get(book_id=book.book_id, user_id=self.user.id)
         cart.amount = amount
         cart.save()
         return cart
