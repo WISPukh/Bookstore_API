@@ -31,6 +31,9 @@ fill_db:		## fill database with test data
 flush_db:		## delete all test data
 	docker exec bookstore python manage.py delete_data
 
+collect_static:	## collect static files
+	docker exec bookstore python manage.py collectstatic --no-input
+
 clear_docker_files:	## deletes images, volumes, containers, network for current project
 	docker rm bookstore db
 	docker image rm bookstore_api-bookstore

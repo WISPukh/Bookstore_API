@@ -12,15 +12,13 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 DEBUG = bool(int(os.environ.get('DEBUG')))
 
+# ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split()
 ALLOWED_HOSTS = ['*']
 
 # we use None to properly configure swagger when running project locally
-URL = os.environ.get('URL', None)
 
 if not DEBUG:
-    if URL is None:
-        raise ValueError('If you want to start a project on server, specify URL variable!')
-    CSRF_TRUSTED_ORIGINS = [URL]
+    CSRF_TRUSTED_ORIGINS = ['https://bookstore-api.verdgil.org/']
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_FOR', 'https')
     CSRF_COOKIE_SECURE = True
     CORS_ALLOW_ALL_ORIGINS = True
@@ -117,6 +115,10 @@ USE_TZ = True
 AUTH_USER_MODEL = 'users.User'
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
