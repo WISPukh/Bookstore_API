@@ -55,6 +55,12 @@ class CartItemsViewSet(ModelViewSet):
 
         return Response(status=200, data=serialized_datas)
 
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.model.objects.filter(user_id=request.user.pk, status='CART', **kwargs).first()
+        if not instance:
+            return Response(status=404, data={'error': 'item not found'})
+        return Response(self.serializer_class(instance).data)
+
     @swagger_auto_schema(
         request_body=AddToCardSerializer, responses={
             200: openapi.Response('Successfully added book to cart', schema=CartItemSerializer),
