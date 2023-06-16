@@ -16,9 +16,10 @@ DEBUG = bool(int(os.environ.get('DEBUG')))
 ALLOWED_HOSTS = ['*']
 
 # we use None to properly configure swagger when running project locally
-
+URL = None
 if not DEBUG:
-    CSRF_TRUSTED_ORIGINS = ['https://bookstore-api.verdgil.org/']
+    URL = 'https://bookstore-api.verdgil.org/'
+    CSRF_TRUSTED_ORIGINS = [URL]
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_FOR', 'https')
     CSRF_COOKIE_SECURE = True
     CORS_ALLOW_ALL_ORIGINS = True
