@@ -4,7 +4,6 @@ from uuid import uuid4
 from books.models import Book
 from carts.errors import UnexpectedItemError
 from carts.models import Cart
-from carts.serializers import CartItemSerializer
 
 
 class CartsService:
@@ -67,35 +66,24 @@ class CartsService:
 
         return returned_data
 
-    def update_cart(self, data, *args, **kwargs):  # noqa
-        serializer = CartItemSerializer(data=data["cart"], many=True)
-        serializer.is_valid(raise_exception=True)
+    def update_cart(self, data):
+        data = sorted(data["cart"], key=lambda x: x['book_id'])
+        request_book_ids = sorted(item['book_id'] for item in data)
 
-        data = data["cart"]
-        returned_data = []
+        books = Cart.objects.filter(
+            user_id=self.user.pk, status='CART', book_id__in=request_book_ids
+        ).order_by('book_id')
+        for index, book in enumerate(books):
+            book.amount = data[index]['amount']
+        Cart.objects.bulk_update(books, ['amount'])
 
-        for item in data:
-            if item["amount"] == 0:
-                continue
-
-            found_item, _ = Cart.objects.get_or_create(
-                status='CART',
-                book_id=item['book_id'],
-                user_id=self.user.pk,
-            )
-
-            found_item.amount = item["amount"]
-            found_item.save()
-            returned_data.append(found_item)
-
-        return returned_data
+        return books
 
     def single_update(self, book, data):
         amount = data.get('amount')
-        cart = Cart.objects.get(book_id=book.book_id, user_id=self.user.id)
-        cart.amount = amount
-        cart.save()
-        return cart
+        cart = Cart.objects.filter(book_id=book.book_id, user_id=self.user.id)
+        cart.update(amount=amount)
+        return Cart.objects.get_detailed_information(self.user.id, cart.first().book_id)
 
     def add_to_cart(self, book, data):
         amount = data.get('amount')
@@ -110,4 +98,4 @@ class CartsService:
             cart.amount += amount
         cart.save()
 
-        return cart
+        return Cart.objects.get_detailed_information(self.user.id, cart.book_id)

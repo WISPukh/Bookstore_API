@@ -39,13 +39,13 @@ class CartViewSet(GenericViewSet):
 class CartItemsViewSet(ModelViewSet):
     model = Cart
     queryset = model.objects.all()
-    serializer_class = BaseCartSerializer
-    http_method_names = ['post', 'delete', 'get', 'patch']
+    serializer_class = CartItemSerializer
+    http_method_names = ['post', 'delete', 'get', 'patch', 'options']
     permission_classes = [IsAuthenticated]
     lookup_field = 'book_id'
 
     @swagger_auto_schema(
-        responses={'200': openapi.Response(description='Cart List', schema=CartSerializer)}
+        responses={'200': openapi.Response(description='Cart List', schema=serializer_class)}
     )
     def list(self, request, *args, **kwargs):
         service = CartsService(self.request.user, self.model)
@@ -56,14 +56,14 @@ class CartItemsViewSet(ModelViewSet):
         return Response(status=200, data=serialized_datas)
 
     def retrieve(self, request, *args, **kwargs):
-        instance = self.model.objects.filter(user_id=request.user.pk, status='CART', **kwargs).first()
+        instance = self.model.objects.get_detailed_information(user_pk=request.user.pk, **kwargs)
         if not instance:
             return Response(status=404, data={'error': 'item not found'})
         return Response(self.serializer_class(instance).data)
 
     @swagger_auto_schema(
         request_body=AddToCardSerializer, responses={
-            200: openapi.Response('Successfully added book to cart', schema=CartItemSerializer),
+            200: openapi.Response('Successfully added book to cart', schema=serializer_class),
             400: openapi.Response('Amount of books is a not positive number!'),
         }
     )
@@ -79,11 +79,11 @@ class CartItemsViewSet(ModelViewSet):
 
         service = CartsService(user=self.request.user, model=Book)
         instance = service.add_to_cart(book=book, data=self.request.data)
-        return Response(CartItemSerializer(instance).data)
+        return Response(self.serializer_class(instance).data)
 
     @swagger_auto_schema(
         request_body=AmountForCartSerializer, responses={
-            200: openapi.Response(description='Cart List', schema=CartItemSerializer),
+            200: openapi.Response(description='Cart List', schema=serializer_class),
             400: openapi.Response(description='Book is not in cart or amount is not positive number')
         }
     )
@@ -105,28 +105,31 @@ class CartItemsViewSet(ModelViewSet):
     @swagger_auto_schema(
         method='patch',
         request_body=RepresentationCartUpdateSerializer,
-        responses={'200': openapi.Response(description='Cart List', schema=CartItemSerializer)}
+        responses={'200': openapi.Response(description='Cart List', schema=serializer_class)}
     )
     @action(methods=['patch'], detail=False, url_path='bulk')
-    def patch(self, request, *args, **kwargs):
-        items_in_cart = self.model.objects.filter(user_id=request.user.pk, status='CART')
+    def bulk_patch(self, request, *args, **kwargs):
+        items_ids_in_cart = self.model.objects.filter(
+            user_id=request.user.pk, status='CART'
+        ).values_list('book_id', flat=True)
 
-        if not items_in_cart:
+        if not items_ids_in_cart:
             return Response(status=400, data={'error': 'Cart is empty!'})
 
-        # TODO: remake using select related
-        ids_not_in_cart = []
-        for item in self.request.data.get('cart'):
-            book_id = item.get('book_id')
-            if not items_in_cart.filter(book_id=book_id).exists():
-                ids_not_in_cart.append(str(book_id))
+        request_book_ids = set([item['book_id'] for item in request.data.get('cart')])
 
-        if ids_not_in_cart:
-            return Response(status=400, data={'error': f"Items with id: {', '.join(ids_not_in_cart)} are not in cart!"})
+        unknown_ids = request_book_ids.difference(items_ids_in_cart)
+
+        if unknown_ids:
+            unknown_ids = list(map(str, unknown_ids))
+            return Response(status=400, data={'error': f"Items with id: {', '.join(unknown_ids)} are not in cart!"})
+
+        if any(item['amount'] < 1 for item in request.data.get('cart')):
+            return Response(status=400, data={'error': "Amount of items should be a positive number!"})
 
         service = CartsService(self.request.user, self.model)
-        datas = service.update_cart(data=self.request.data, *args, **kwargs)
-        return Response(status=200, data=CartItemSerializer(datas, many=True).data)
+        datas = service.update_cart(data=self.request.data)
+        return Response(status=200, data=self.serializer_class(datas, many=True).data)
 
     @swagger_auto_schema(responses={
         204: openapi.Response('Successfully deleted book from cart'),

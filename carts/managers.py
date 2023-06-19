@@ -1,3 +1,5 @@
+from typing import Optional
+
 from django.db import models
 
 from books.models import Book
@@ -10,6 +12,20 @@ class CartManager(models.Manager):
 
     def get_personal_discount(self, user_pk):  # noqa
         return User.objects.filter(id=user_pk).first().personal_discount * 0.01
+
+    def get_detailed_information(self, user_pk, book_id) -> Optional[dict]:
+        product = self.filter(user_id=user_pk, status='CART', book_id=book_id)
+
+        if not product:
+            return None
+
+        product = product.values().first()
+        new_price = Book.objects.get(id=product.get('book_id')).price_discounted
+
+        product['price_discounted'] = product['amount'] * new_price
+        product['new_price'] = new_price
+
+        return product
 
     def total_price_discounted(self, user_pk, status):
 
