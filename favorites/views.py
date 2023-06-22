@@ -55,7 +55,14 @@ class FavoriteViewSet(PaginationViewSetMixin, GenericViewSet, CreateModelMixin, 
     )
     def create(self, request, *args, **kwargs):
         self.request.data.update(user_id=self.request.user.id)
-        return super().create(request, *args, **kwargs)
+        if not self.check_exists(request.data):
+            return super().create(request, *args, **kwargs)
+        return Response(status=400, data={
+            'error': f"This book with id {request.data.get('book_id')} is already in your favorites!"
+        })
+
+    def check_exists(self, request_data):
+        return self.model.objects.filter(**request_data).exists()
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
