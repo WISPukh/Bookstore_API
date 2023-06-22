@@ -21,7 +21,7 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="puhoff.ol@yandex.ru | aleksandr.boyushenko@gmail.com"),
         license=openapi.License(name="absolutely working license"),
     ),
-    url=settings.URL,
+    url=f'{settings.URL}/',
     public=True,
     permission_classes=[permissions.AllowAny],
 )
