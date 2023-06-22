@@ -10,10 +10,9 @@ class Favorite(models.Model):
         on_delete=models.CASCADE
     )
 
-    book_id = models.OneToOneField(
+    book_id = models.ForeignKey(
         Book,
         on_delete=models.CASCADE,
-        unique=True
     )
 
     def __str__(self):
