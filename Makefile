@@ -16,6 +16,9 @@ start:			## Start services
 stop:			## Stop services
 	docker-compose -f docker-compose-local.yml stop
 
+restart:			## Restart services
+	docker-compose -f docker-compose-local.yml restart
+
 down:			## Stop and remove containers, networks, images, and volumes
 	docker-compose -f docker-compose-local.yml down
 
