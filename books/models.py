@@ -54,6 +54,12 @@ class Book(models.Model):
         verbose_name=_('Date of writing')
     )
 
+    preview_image = models.ImageField(
+        default=None,
+        null=True,
+        blank=True
+    )
+
     def __str__(self):
         return str(self.title)
 

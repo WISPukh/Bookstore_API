@@ -1,4 +1,5 @@
 from django.contrib.admin import ModelAdmin, register
+from django.utils.safestring import mark_safe
 
 from books.models import Book
 
@@ -22,9 +23,15 @@ class BookAdmin(ModelAdmin):
         'release_date'
     )
     search_fields = ('title',)
+    readonly_fields = ['preview']
 
-    def genre(self, obj: Book) -> str:  # noqa
-        return '\n'.join([genre.title for genre in obj.genres.all()])
+    def preview(self, book: Book) -> str:  # noqa
+        if book.preview_image.url:
+            return mark_safe(f"<img src='{book.preview_image.url}'>")
+        return 'No image'
 
-    def authors(self, obj: Book) -> str:  # noqa
-        return '\n'.join([author.full_name for author in obj.author.all()])
+    def genre(self, book: Book) -> str:  # noqa
+        return '\n'.join([genre.title for genre in book.genres.all()])
+
+    def authors(self, book: Book) -> str:  # noqa
+        return '\n'.join([author.full_name for author in book.author.all()])
