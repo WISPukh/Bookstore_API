@@ -15,10 +15,8 @@ DEBUG = bool(int(os.environ.get('DEBUG')))
 # ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split()
 ALLOWED_HOSTS = ['*']
 
-# we use None to properly configure swagger when running project locally
-URL = None
+URL = os.environ.get('BASE_URL', default='http://localhost:8000')
 if not DEBUG:
-    URL = 'https://bookstore-api.verdgil.org'
     CSRF_TRUSTED_ORIGINS = [URL]
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_FOR', 'https')
     CSRF_COOKIE_SECURE = True
