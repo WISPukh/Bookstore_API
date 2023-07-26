@@ -125,7 +125,7 @@ JWT_AUTH = bool(int(os.environ.get('JWT_AUTH', False)))
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'authentication.authenticate.CustomAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated' if JWT_AUTH else 'rest_framework.permissions.AllowAny',
@@ -168,6 +168,14 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(hours=ACCESS_TOKEN_LIFETIME),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(hours=REFRESH_TOKEN_LIFETIME),
+
+    # Custom HTTPOnly settings.
+    'AUTH_COOKIE': os.environ.get('AUTH_COOKIE'),
+    'AUTH_COOKIE_DOMAIN': os.environ.get('AUTH_COOKIE_DOMAIN'),
+    'AUTH_COOKIE_SECURE': bool(int(os.environ.get('AUTH_COOKIE_SECURE', False))),
+    'AUTH_COOKIE_HTTP_ONLY': bool(int(os.environ.get('AUTH_COOKIE_HTTP_ONLY', True))),
+    'AUTH_COOKIE_PATH': os.environ.get('AUTH_COOKIE_PATH'),
+    'AUTH_COOKIE_SAMESITE': os.environ.get('AUTH_COOKIE_SAMESITE'),
 }
 
 SWAGGER_SETTINGS = {
