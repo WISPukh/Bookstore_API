@@ -36,7 +36,7 @@ class UsersViewSet(CreateModelMixin, GenericViewSet):
     )
     @action(methods=['get'], detail=False, url_path='available')
     def exists(self, request, *args, **kwargs):
-        return Response({'is_available': self.check_user_exists(email=request.data.get('email'))})
+        return Response({'is_available': not self.check_user_exists(email=request.query_params.get('email'))})
 
     @action(methods=['get'], detail=False, url_path='me', permission_classes=[IsAuthenticated])
     def get_object(self, request, *args, **kwargs):
