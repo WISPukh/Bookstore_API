@@ -6,13 +6,6 @@ from django.views.static import serve
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
-)
-
-from authentication.views import CookieTokenObtainPairView, CookieTokenRefreshView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -37,11 +30,9 @@ urlpatterns = [
     # admin panel
     path('admin/', admin.site.urls),
 
-    # authorization via token
-    path('api/token/', CookieTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', CookieTokenRefreshView.as_view(), name='token_refresh'),
 
     # apps
+    path('api/token/', include('authentication.urls')),
     path('api/users/', include('users.urls')),
     path('api/authors/', include('author.urls')),
     path('api/books/', include('books.urls')),
