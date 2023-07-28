@@ -8,3 +8,7 @@ class SwaggerCreateUserRepresentation(Serializer):  # noqa
 
 class SwaggerUserExistsRepresentation(Serializer):  # noqa
     is_available = BooleanField()
+
+
+class SwaggerUserExistsRequirements(Serializer):  # noqa
+    email = EmailField()
