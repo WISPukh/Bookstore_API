@@ -1,19 +1,21 @@
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.viewsets import GenericViewSet
 
-from bookstore.mixins import PaginationViewSetMixin
+from bookstore.mixins import ItemsViewSetMixin
 from bookstore.permissions import IsAdminUserOrReadOnly
 from .models import Author
 from .serializers import AuthorSerializer, PaginationAuthorSerializer, SuggestionList
 
 
-class AuthorViewSet(PaginationViewSetMixin, ModelViewSet):
+class AuthorViewSet(ItemsViewSetMixin):
+    model = Author
+
     serializer_class = AuthorSerializer
     pagination_serializer_class = PaginationAuthorSerializer
     http_method_names = ['get', 'patch', 'delete', 'post']
-    permission_classes = IsAdminUserOrReadOnly
+    permission_classes = (IsAdminUserOrReadOnly, )
 
     def get_queryset(self):
         return Author.objects.all()
