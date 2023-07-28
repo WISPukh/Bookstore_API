@@ -1,10 +1,13 @@
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.middleware import csrf
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from authentication.swagger import SwaggerLoginRequirements
 
 
 def get_tokens_for_user(user):
@@ -16,6 +19,7 @@ def get_tokens_for_user(user):
 
 
 class LoginView(APIView):
+    @swagger_auto_schema(request_body=SwaggerLoginRequirements)
     def post(self, request, format=None):
         data = request.data
         response = Response()
