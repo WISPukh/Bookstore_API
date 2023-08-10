@@ -44,3 +44,12 @@ class LoginView(APIView):
                 return Response({"No active": "This account is not active!!"}, status=status.HTTP_404_NOT_FOUND)
         else:
             return Response({"Invalid": "Invalid email or password!!"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class LogoutView(APIView):
+    def post(self, request, format=None):
+        response = Response()
+        response.delete_cookie('csrftoken')
+        response.delete_cookie('access_token')
+        response.data = {"Success": "Logout successfully"}
+        return response
