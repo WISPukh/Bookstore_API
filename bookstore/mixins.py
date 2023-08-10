@@ -28,7 +28,7 @@ class PaginationViewSetMixin:
         return self.get_paginated_response(queryset)
 
 
-class ItemsViewSetMixin(ModelViewSet, PaginationViewSetMixin):
+class ItemsViewSetMixin(PaginationViewSetMixin, ModelViewSet):
 
     model = None
 
