@@ -49,7 +49,6 @@ class LoginView(APIView):
 class LogoutView(APIView):
     def post(self, request, format=None):
         response = Response()
-        response.delete_cookie('csrftoken')
         response.delete_cookie('access_token')
         response.data = {"Success": "Logout successfully"}
         return response
